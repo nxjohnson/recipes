@@ -1,0 +1,30 @@
+.menuPortal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 5rem;
+  padding: 2rem 2rem;
+  display: flex;
+  background-color: var(--color-background-light);
+}
+
+.title {
+  width: 50%;
+}
+
+.categoryList {
+  width: 50%;
+}
+
+.category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: brigade,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  border-bottom: 3px solid var(--color-lines);
+}
