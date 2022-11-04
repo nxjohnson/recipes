@@ -1,22 +1,12 @@
-import type { ReactElement } from 'react'
-import type { NextPageWithLayout } from './_app'
-import Layout from '../components/layout'
 import styles from '../styles/Home.module.css'
 import Head from 'next/head'
+import PageHeader from '../components/layouts/PageHeader'
 
-const Home: NextPageWithLayout = () => {
+const Home = () => {
   return (
-    <>
-      <h1>Neil Cooks</h1>
-    </>
-  )
-}
-
-Home.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>
-      {page}
-    </Layout>
+    <PageHeader header='Neil Cooks'>
+      <div>Content</div>
+    </PageHeader>
   )
 }
 
