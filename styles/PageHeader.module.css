@@ -1,0 +1,13 @@
+.pageHeaderContainer {
+  display: flex;
+  width: 100%;
+  padding: 2rem 2rem;
+}
+
+.pageHeaderContainer > h1 {
+  width: 50%;
+}
+
+.pageHeaderContainer > div {
+  width: 50%;
+}
