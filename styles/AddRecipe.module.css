@@ -1,0 +1,22 @@
+.formCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 2px solid black;
+  margin-bottom: 2rem;
+}
+
+.ingredientForm {
+  display: flex;
+  align-items: center;
+}
+
+.ingredientFields {
+  display: flex;
+  flex-direction: column;
+}
+
+.removeIcon {
+  font-size: 2rem;
+  cursor: pointer;
+}
