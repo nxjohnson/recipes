@@ -22,10 +22,10 @@ interface TextAreaProps {
 
 export function Input({ label, type, placeholder, register, name, ...rest }: InputProps): JSX.Element {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <label htmlFor={name}>{label}</label>
       <input id={name} type={type} placeholder={placeholder} {...register(name)} {...rest} />
-    </>
+    </div>
   )
 }
 
@@ -47,9 +47,9 @@ export function Select({ label, register, options, name, ...rest }: SelectProps)
 
 export function TextArea({ label, register, name, ...rest }: TextAreaProps): JSX.Element {
   return (
-    <>
+    <div className="flex items-center gap-4">
       <label htmlFor={name}>{label}</label>
       <textarea id={name} {...register(name)} {...rest} />
-    </>
+    </div>
   )
 }
