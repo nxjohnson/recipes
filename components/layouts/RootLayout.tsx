@@ -11,7 +11,7 @@ const RootLayout: LayoutProps = ({ children }) => {
   return (
     <>
       <Navbar />
-      <main className="w-[calc(100%_-_5rem)] p-16">{children}</main>
+      <main className="w-full pt-16">{children}</main>
     </>
   )
 }

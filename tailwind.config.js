@@ -11,7 +11,8 @@ module.exports = {
   theme: {
     colors: {
       white: '#FFFFFF',
-      black: '000000',
+      black: '#000000',
+      error: '#ED6A5A',
       neutral: colors.neutral,
     },
     fontFamily: {
@@ -19,7 +20,15 @@ module.exports = {
       'subHeading': ['brigade', 'sans-serif'],
       'sans': ['Roboto', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      aspectRatio: {
+        'square': ' 1 / 1',
+        '2/3': '3 / 2'
+      },
+      width: {
+        '136': '34rem'
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/aspect-ratio'),
