@@ -65,9 +65,13 @@ const Navbar: FunctionComponent = () => {
             className="text-3xl cursor-pointer"
             onClick={closeMenu}
           />
-          <Link href={"/add-recipe"} onClick={closeMenu}>
-            <MdOutlinePostAdd className="text-3xl cursor-pointer" />
-          </Link>
+          {session ? (
+            <Link href={"/add-recipe"} onClick={closeMenu}>
+              <MdOutlinePostAdd className="text-3xl cursor-pointer" />
+            </Link>
+          ) : (
+            <></>
+          )}
           <MdOutlineShoppingBag
             className="text-3xl cursor-pointer"
             onClick={closeMenu}
@@ -92,13 +96,17 @@ const Navbar: FunctionComponent = () => {
               >
                 Recipes
               </Link>
-              <Link
-                href={"/add-recipe"}
-                className="border-b-2 border-neutral-200"
-                onClick={toggleMenu}
-              >
-                Add Recipe
-              </Link>
+              {session ? (
+                <Link
+                  href={"/add-recipe"}
+                  className="border-b-2 border-neutral-200"
+                  onClick={toggleMenu}
+                >
+                  Add Recipe
+                </Link>
+              ) : (
+                <></>
+              )}
               <Link
                 href={"/shopping-list"}
                 className="border-b-2 border-neutral-200"
