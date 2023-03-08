@@ -3,6 +3,7 @@ import { Recipe } from "../../types/RecipeTypes";
 
 import clientPromise from "../../lib/mongodb";
 import { InferGetServerSidePropsType } from "next";
+import { getRecipes } from "../../db/recipe";
 
 const Recipes = ({
   recipes,
@@ -20,7 +21,7 @@ const Recipes = ({
             return (
               <div
                 className="border border-t-0 border-neutral-300 hover:shadow-lg"
-                key={recipe._id}
+                key={recipe.recipeName}
               >
                 <RecipeCard recipe={recipe} />
               </div>
@@ -35,10 +36,7 @@ const Recipes = ({
 };
 
 export async function getServerSideProps() {
-  const client = await clientPromise;
-  const db = client.db("recipesDb");
-  const recipes = await db.collection("recipes").find({}).toArray();
-
+  const recipes = await getRecipes();
   const data = JSON.parse(JSON.stringify(recipes));
 
   return {

@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 interface Attributes {
   category: string;
 }
@@ -21,7 +23,7 @@ export interface Nutrition {
 }
 
 export interface Recipe {
-  _id?: string;
+  _id?: ObjectId;
   activeTime: number;
   attributes: Attributes;
   created: Date;
