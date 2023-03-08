@@ -1,5 +1,6 @@
 import clientPromise from "../../../lib/mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createRecipe } from "../../../db/recipe";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,15 +12,11 @@ export default async function handler(
     return res.status(404);
   }
   try {
-    const client = await clientPromise;
-    const db = client.db("recipesDb");
-    const response = await db.collection("recipes").insertOne(JSON.parse(body));
+    const response = await createRecipe(JSON.parse(body));
 
     res.status(201).send(response.insertedId);
+  } catch (error) {
+    console.log(error);
+    res.status(404);
   }
-  catch(error) {
-    console.log(error)
-    res.status(404)
-  }
-
 }
