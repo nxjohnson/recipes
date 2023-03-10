@@ -1,6 +1,10 @@
 import clientPromise from "../lib/mongodb";
 import { ObjectId } from "mongodb";
-import { Recipe } from "../types/RecipeTypes";
+import { Recipe, RecipeFilters } from "../types/RecipeTypes";
+
+interface GetRecipeQuery {
+  attributes?: { category: RecipeFilters };
+}
 
 export async function createRecipe(recipe: Recipe) {
   const client = await clientPromise;
@@ -11,7 +15,7 @@ export async function createRecipe(recipe: Recipe) {
   return response;
 }
 
-export async function getOneRecipe(id: string) {
+export async function getOneRecipe(id: ObjectId) {
   const client = await clientPromise;
 
   const db = client.db("recipesDb");
@@ -22,11 +26,17 @@ export async function getOneRecipe(id: string) {
   return recipe;
 }
 
-export async function getRecipes() {
+export async function getRecipes(category: RecipeFilters) {
+  let query: GetRecipeQuery = {}
+
+  if (category !== 'View All') {
+    query.attributes = { category };
+  }
+
   const client = await clientPromise;
 
   const db = client.db("recipesDb");
-  const recipes = await db.collection("recipes").find({}).toArray();
+  const recipes = await db.collection("recipes").find(query).toArray();
 
   return recipes;
 }

@@ -1,8 +1,10 @@
+import { RecipeCategory } from "./RecipeTypes";
+
 export interface AddRecipeStep1 {
   recipeName: string;
   sourceName: string;
   sourceUrl: string | null;
-  category: string;
+  category: RecipeCategory;
   activeTime: number;
   totalTime: number;
 }

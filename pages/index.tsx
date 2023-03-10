@@ -21,8 +21,10 @@ const Home = () => {
           return (
             <Link
               key={category}
-              href={`/recipes`}
-              // onClick={() => toggleMenu()}
+              href={{
+                pathname: '/recipes',
+                query: { category }
+              }}
             >
               <div className="flex justify-between font-subHeading text-xl font-medium border-b-2 border-neutral-200">
                 <span>{category}</span>

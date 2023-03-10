@@ -4,6 +4,7 @@ import { Input, Select } from "../../ui/Form";
 import ImageUpload from "../../layouts/ImageUpload";
 import useFormContext from "../../../hooks/useFormContext";
 import { AddRecipeStep1 } from "../../../types/FormTypes";
+import { RecipeCategory } from "../../../types/RecipeTypes";
 import Button from "../../ui/Button";
 
 const Step1 = () => {
@@ -21,7 +22,7 @@ const Step1 = () => {
     totalTime,
   };
 
-  const categoryOptions: string[] = [
+  const categoryOptions: RecipeCategory[] = [
     "Apps",
     "Bread",
     "Breakfast",

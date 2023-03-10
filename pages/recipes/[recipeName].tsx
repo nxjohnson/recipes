@@ -5,10 +5,11 @@ import NutritionalInfo from "../../components/NutritionalInfo";
 import Header from "../../components/layouts/PageHeader";
 import RecipeSubHeading from "../../components/RecipeSubHeading";
 import { getOneRecipe } from "../../db/recipe";
+import { ObjectId } from "mongodb";
 
 interface ServerSideProps {
   query: {
-    _id: string;
+    _id: ObjectId;
   };
 }
 

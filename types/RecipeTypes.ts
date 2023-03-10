@@ -1,7 +1,11 @@
 import { ObjectId } from "mongodb";
 
+export type RecipeCategory = "Apps" | "Bread" | "Breakfast" | "Mains" | "Sides" | "Sweets" | "";
+
+export type RecipeFilters = "Apps" | "Bread" | "Breakfast" | "Mains" | "Sides" | "Sweets" | "View All";
+
 interface Attributes {
-  category: string;
+  category: RecipeCategory;
 }
 
 export interface Ingredients {

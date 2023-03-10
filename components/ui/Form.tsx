@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 
 interface InputProps {
   label?: string;
@@ -16,6 +16,7 @@ interface SelectProps {
   options: string[];
   name: string;
   required?: boolean;
+  onChange?: ChangeEventHandler
 }
 
 interface TextAreaProps {
@@ -61,6 +62,7 @@ export function Select({
   name,
   required = false,
   register,
+  onChange,
   ...rest
 }: SelectProps): JSX.Element {
   return (
@@ -72,7 +74,7 @@ export function Select({
       }
       <select
         className="form-selct block mt-1 w-full font-normal"
-        {...register(name, { required })}
+        {...register(name, { onChange, required })}
         {...rest}
         defaultValue="none"
       >
