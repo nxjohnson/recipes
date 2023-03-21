@@ -1,46 +1,130 @@
-import clientPromise from "../lib/mongodb";
-import { ObjectId } from "mongodb";
-import { Recipe, RecipeFilters } from "../types/RecipeTypes";
+import { supabase } from "../lib/supabaseClient";
+import {
+  Nutrition,
+  RecipeCategory,
+  RecipeFilters,
+  Source,
+} from "../types/RecipeTypes";
+import { getIngredients } from "./ingredient";
 
-interface GetRecipeQuery {
-  attributes?: { category: RecipeFilters };
-}
+export const createRecipe = async (
+  activeTime: number,
+  category: RecipeCategory,
+  notes: string,
+  numberOfServings: number,
+  nutrition: Nutrition,
+  recipeDirections: string[],
+  recipeName: string,
+  source: Source,
+  totalTime: number
+) => {
+  const { calories, protein, carbs, fats } = nutrition;
+  const { sourceName, sourceUrl } = source;
+  const { data, error } = await supabase
+    .from("recipes")
+    .insert({
+      active_time: activeTime,
+      calories,
+      carbs,
+      category,
+      fats,
+      notes,
+      number_of_servings: numberOfServings,
+      protein,
+      recipe_directions: recipeDirections,
+      recipe_name: recipeName,
+      source_name: sourceName,
+      source_url: sourceUrl,
+      total_time: totalTime,
+    })
+    .select();
 
-export async function createRecipe(recipe: Recipe) {
-  const client = await clientPromise;
-
-  const db = client.db("recipesDb");
-  const response = await db.collection("recipes").insertOne(recipe);
-
-  return response;
-}
-
-export async function getOneRecipe(id: ObjectId) {
-  const client = await clientPromise;
-
-  const db = client.db("recipesDb");
-  const recipe = await db
-    .collection("recipes")
-    .findOne({ _id: new ObjectId(id) });
-
-  return recipe;
-}
-
-export async function getRecipes(category: RecipeFilters) {
-  let query: GetRecipeQuery = {}
-
-  if (category !== 'View All') {
-    query.attributes = { category };
+  if (error) {
+    console.log(error);
+    return;
   }
 
-  const client = await clientPromise;
+  return data[0].id;
+};
 
-  const db = client.db("recipesDb");
-  const recipes = await db.collection("recipes").find(query).toArray();
+export const getOneRecipe = async (recipeId: number) => {
+  let ingredients = await getIngredients(recipeId);
 
-  return recipes;
+  const { data, error } = await supabase
+    .from("recipes")
+    .select(
+      "id, activeTime:active_time, calories, carbs, category:categories(name:category), fats, image:recipe_images(url), notes, numberOfServings:number_of_servings, protein, recipeDirections:recipe_directions, recipeName:recipe_name, sourceName:source_name, sourceUrl:source_url, totalTime:total_time"
+    )
+    .eq("id", recipeId)
+    .single();
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  const {
+    id,
+    activeTime,
+    image,
+    notes,
+    numberOfServings,
+    recipeDirections,
+    recipeName,
+    totalTime,
+    category,
+    calories,
+    carbs,
+    fats,
+    protein,
+    sourceName,
+    sourceUrl,
+  } = data;
+
+  const formattedRecipe = {
+    id,
+    activeTime,
+    image: image[0].url,
+    ingredients,
+    notes,
+    numberOfServings,
+    recipeDirections,
+    recipeName,
+    totalTime,
+    attributes: { category: category.name },
+    nutrition: { calories, carbs, fats, protein },
+    source: { sourceName, sourceUrl },
+  };
+
+  return formattedRecipe;
+};
+
+export async function getRecipes(category: RecipeFilters) {
+  let query = supabase
+    .from("recipes")
+    .select(
+      "id, categories!inner(category), image:recipe_images(url), recipeName:recipe_name"
+    );
+
+  if (category !== "view all") {
+    query = query.eq("categories.category", category);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  const formattedRecipes = data.map(({ id, recipeName, categories, image }) => {
+    return {
+      id,
+      recipeName,
+      attributes: { category: categories.category },
+      image: image[0].url,
+    };
+  });
+
+  return formattedRecipes;
 }
-
-export function updateRecipe() {}
-
-export function deleteRecipe() {}

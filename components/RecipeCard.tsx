@@ -6,13 +6,13 @@ interface Props {
   recipe: Recipe;
 }
 const RecipeCard = ({ recipe }: Props) => {
-  const { _id, recipeName, image } = recipe;
+  const { id, recipeName, attributes, image } = recipe;
   return (
     <>
       <Link
         href={{
           pathname: `/recipes/${recipeName}`,
-          query: { _id },
+          query: { id },
         }}
       >
       <div className="relative aspect-w-3 aspect-h-2 w-full">

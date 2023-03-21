@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { MeasuringUnits } from "../components/utilies/measuringUnits";
 
 export type RecipeCategory = "Apps" | "Bread" | "Breakfast" | "Mains" | "Sides" | "Sweets" | "";
 
@@ -11,10 +12,10 @@ interface Attributes {
 export interface Ingredients {
   ingredientName: string;
   quantity: number | null;
-  unitsOfMeasure: string;
+  unitsOfMeasure: MeasuringUnits;
 }
 
-interface Source {
+export interface Source {
   sourceUrl: string | null;
   sourceName: string;
 }

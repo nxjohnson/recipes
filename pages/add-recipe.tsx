@@ -77,6 +77,7 @@ const AddRecipe = (): JSX.Element => {
   };
 
   const addRecipe = async (): Promise<void> => {
+    console.log(formData)
     const response = await fetch("/api/recipes", {
       method: "POST",
       body: JSON.stringify(formData),

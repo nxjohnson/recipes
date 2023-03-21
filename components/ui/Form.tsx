@@ -2,12 +2,13 @@ import React, { ChangeEventHandler } from "react";
 
 interface InputProps {
   label?: string;
-  type: "text" | "number" | "email" | "password";
+  type: "text" | "number" | "email" | "password" | "search";
   placeholder?: string;
   name: string;
   required?: boolean;
   decimal?: number;
   register?: any;
+  onChange?: ChangeEventHandler;
 }
 
 interface SelectProps {
@@ -34,6 +35,7 @@ export function Input({
   required = false,
   decimal = 1,
   register,
+  onChange,
   ...rest
 }: InputProps): JSX.Element {
   return (
@@ -48,7 +50,7 @@ export function Input({
         id={name}
         type={type}
         placeholder={placeholder}
-        {...register(name, { required })}
+        {...register(name, { onChange, required })}
         {...rest}
         step={type === "number" ? decimal : undefined}
       />

@@ -9,7 +9,7 @@ import { ObjectId } from "mongodb";
 
 interface ServerSideProps {
   query: {
-    _id: ObjectId;
+    id: number;
   };
 }
 
@@ -53,7 +53,7 @@ const Recipe = ({
 };
 
 export async function getServerSideProps({ query }: ServerSideProps) {
-  const recipeId = query._id;
+  const recipeId = query.id;
 
   const recipe = await getOneRecipe(recipeId);
   const data = JSON.parse(JSON.stringify(recipe));

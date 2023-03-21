@@ -45,11 +45,11 @@ const Recipes = ({
 
 export async function getServerSideProps({ query }: ServerSideProps) {
   const { category } = query;
-  const recipes = await getRecipes(category);
+  const recipes = await getRecipes(category.toLowerCase());
   const data = JSON.parse(JSON.stringify(recipes));
 
   return {
-    props: { recipes: data, category },
+    props: { recipes, category },
   };
 }
 
