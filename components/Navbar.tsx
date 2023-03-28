@@ -8,10 +8,12 @@ import {
   MdOutlineSearch,
 } from "react-icons/md";
 import Logo from "./ui/Logo";
-import { useSession } from "next-auth/react";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Navbar: FunctionComponent = () => {
-  const { data: session } = useSession();
+  const supabaseClient = useSupabaseClient();
+  const user = useUser();
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const toggleMenu = () => {
@@ -65,7 +67,7 @@ const Navbar: FunctionComponent = () => {
             className="text-3xl cursor-pointer"
             onClick={closeMenu}
           />
-          {session ? (
+          {user ? (
             <Link href={"/add-recipe"} onClick={closeMenu}>
               <MdOutlinePostAdd className="text-3xl cursor-pointer" />
             </Link>
@@ -96,7 +98,7 @@ const Navbar: FunctionComponent = () => {
               >
                 Recipes
               </Link>
-              {session ? (
+              {user ? (
                 <Link
                   href={"/add-recipe"}
                   className="border-b-2 border-neutral-200"
@@ -114,14 +116,16 @@ const Navbar: FunctionComponent = () => {
               >
                 Shopping List
               </Link>
-              {session ? (
-                <Link
-                  href={"/signout"}
+              {user ? (
+                <span
                   className="border-b-2 border-neutral-200"
-                  onClick={toggleMenu}
+                  onClick={() => {
+                    supabaseClient.auth.signOut();
+                    toggleMenu();
+                  }}
                 >
                   Sign Out
-                </Link>
+                </span>
               ) : (
                 <Link
                   href={"/signin"}

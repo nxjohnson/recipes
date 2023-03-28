@@ -1,26 +1,47 @@
 import { useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
-import Button from "../components/ui/Button";
 import { useRouter } from "next/router";
-
-interface FormProps {
-  email: string;
-  password: string;
-}
+import { GetServerSideProps } from "next";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 export default function SignIn() {
-  const { data: session } = useSession();
+  const supabaseClient = useSupabaseClient();
+  const user = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
+    if (user) {
       router.push("/");
     }
-  });
+  }, [user, router]);
+
   return (
-    <>
-      Not signed in <br />
-      <Button onClick={() => signIn()}>Sign in</Button>
-    </>
+    <Auth
+      redirectTo="http://localhost:3000/"
+      appearance={{ theme: ThemeSupa }}
+      supabaseClient={supabaseClient}
+      providers={["github"]}
+    />
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {},
+  };
+};

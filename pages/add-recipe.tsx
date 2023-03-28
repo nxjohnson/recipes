@@ -1,13 +1,15 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Recipe } from "../types/RecipeTypes";
 import { useRouter } from "next/router";
+import { useUser } from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { GetServerSideProps } from "next";
+import { Recipe } from "../types/RecipeTypes";
 import Step1 from "../components/forms/addRecipe/Step1";
 import Step2 from "../components/forms/addRecipe/Step2";
 import Step3 from "../components/forms/addRecipe/Step3";
 import Step4 from "../components/forms/addRecipe/Step4";
 import Step5 from "../components/forms/addRecipe/Step5";
 import FormProgressBar from "../components/ui/FormProgressBar";
-import { useSession } from "next-auth/react";
 
 interface Context {
   formData: Recipe;
@@ -19,13 +21,13 @@ export const FormContext = createContext<Context | undefined>(undefined);
 
 const AddRecipe = (): JSX.Element => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const user = useUser();
 
   useEffect(() => {
-    if (!session) {
+    if (!user) {
       router.push("/signin");
     }
-  }, [session, router]);
+  }, [user, router]);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Recipe>({
@@ -77,7 +79,7 @@ const AddRecipe = (): JSX.Element => {
   };
 
   const addRecipe = async (): Promise<void> => {
-    console.log(formData)
+    console.log(formData);
     const response = await fetch("/api/recipes", {
       method: "POST",
       body: JSON.stringify(formData),
@@ -89,10 +91,6 @@ const AddRecipe = (): JSX.Element => {
       query: { _id: id },
     });
   };
-
-  if (status === "loading") {
-    return <></>;
-  }
 
   return (
     <FormContext.Provider value={{ setCurrentStep, formData, setFormData }}>
@@ -109,6 +107,30 @@ const AddRecipe = (): JSX.Element => {
       </div>
     </FormContext.Provider>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  console.log(session);
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/signin",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
 };
 
 export default AddRecipe;
