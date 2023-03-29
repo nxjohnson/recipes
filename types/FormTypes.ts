@@ -10,6 +10,10 @@ export interface AddRecipeStep1 {
 }
 
 export interface AddRecipeStep4 {
+  notes: string | null;
+}
+
+export interface AddRecipeStep5 {
   numberOfServings: number;
   calories: number;
   protein: number | null;

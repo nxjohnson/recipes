@@ -28,12 +28,13 @@ export interface Nutrition {
 }
 
 export interface Recipe {
-  _id?: ObjectId;
+  id?: number;
   activeTime: number;
   attributes: Attributes;
-  created: Date;
+  created?: Date;
   image: string | null;
   ingredients: Ingredients[];
+  notes: string | null;
   numberOfServings: number;
   nutrition: Nutrition;
   recipeDirections: string[];

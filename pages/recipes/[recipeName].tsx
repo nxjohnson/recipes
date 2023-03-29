@@ -5,7 +5,6 @@ import NutritionalInfo from "../../components/NutritionalInfo";
 import Header from "../../components/layouts/PageHeader";
 import RecipeSubHeading from "../../components/RecipeSubHeading";
 import { getOneRecipe } from "../../db/recipe";
-import { ObjectId } from "mongodb";
 
 interface ServerSideProps {
   query: {
@@ -54,12 +53,10 @@ const Recipe = ({
 
 export async function getServerSideProps({ query }: ServerSideProps) {
   const recipeId = query.id;
-
   const recipe = await getOneRecipe(recipeId);
-  const data = JSON.parse(JSON.stringify(recipe));
 
   return {
-    props: { recipe: data },
+    props: { recipe },
   };
 }
 

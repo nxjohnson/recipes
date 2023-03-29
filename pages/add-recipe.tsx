@@ -10,6 +10,7 @@ import Step3 from "../components/forms/addRecipe/Step3";
 import Step4 from "../components/forms/addRecipe/Step4";
 import Step5 from "../components/forms/addRecipe/Step5";
 import FormProgressBar from "../components/ui/FormProgressBar";
+import Step6 from "../components/forms/addRecipe/Step6";
 
 interface Context {
   formData: Recipe;
@@ -35,9 +36,9 @@ const AddRecipe = (): JSX.Element => {
     attributes: {
       category: "",
     },
-    created: new Date(),
     image: null,
     ingredients: [],
+    notes: null,
     numberOfServings: 1,
     nutrition: {
       calories: 0,
@@ -57,6 +58,7 @@ const AddRecipe = (): JSX.Element => {
     "Recipe Details",
     "Ingredients",
     "Directions",
+    "Recipe Notes",
     "Nutrition",
     "Review",
   ];
@@ -72,7 +74,9 @@ const AddRecipe = (): JSX.Element => {
       case 4:
         return <Step4 />;
       case 5:
-        return <Step5 addRecipe={addRecipe} />;
+        return <Step5 />;
+      case 6:
+        return <Step6 addRecipe={addRecipe} />;
       default:
         return <Step1 />;
     }
@@ -88,7 +92,7 @@ const AddRecipe = (): JSX.Element => {
 
     router.push({
       pathname: `/recipes/${formData.recipeName}`,
-      query: { _id: id },
+      query: { id },
     });
   };
 
@@ -114,8 +118,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
-  console.log(session);
 
   if (!session)
     return {

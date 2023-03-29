@@ -44,9 +44,8 @@ const Recipes = ({
 };
 
 export async function getServerSideProps({ query }: ServerSideProps) {
-  const { category } = query;
-  const recipes = await getRecipes(category.toLowerCase());
-  const data = JSON.parse(JSON.stringify(recipes));
+  const category = query.category?.toLowerCase() as RecipeFilters || 'view all';
+  const recipes = await getRecipes(category);
 
   return {
     props: { recipes, category },

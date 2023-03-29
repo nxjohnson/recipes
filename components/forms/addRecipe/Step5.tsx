@@ -1,106 +1,92 @@
-import Image from 'next/image';
-import { useRouter } from 'next/router'
-import { MouseEventHandler } from 'react';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Input } from "../../ui/Form";
 import useFormContext from "../../../hooks/useFormContext";
-import { Recipe } from "../../../types/RecipeTypes";
+import { AddRecipeStep5 } from "../../../types/FormTypes";
 import Button from "../../ui/Button";
-import formatFraction from "../../utilies/formatFraction";
-import formatTime from "../../utilies/formatTime";
 
-interface Props {
-  addRecipe: MouseEventHandler<Element>;
-}
 
-const Step5 = ({ addRecipe }: Props) => {
-  const router = useRouter();
-  const { setCurrentStep, formData } = useFormContext()
-  const {
-    activeTime,
-    attributes,
-    image,
-    ingredients,
-    numberOfServings,
-    nutrition,
-    recipeDirections,
-    recipeName,
-    source,
-    totalTime,
-  } = formData;
-  const { category } = attributes;
+
+const Step5 = () => {
+  const { setCurrentStep, formData, setFormData } = useFormContext()
+  const { numberOfServings, nutrition } = formData;
   const { calories, protein, carbs, fats } = nutrition;
-  const { sourceName, sourceUrl } = source;
+  const defaultValues: AddRecipeStep5 = {
+    numberOfServings,
+    calories,
+    protein,
+    carbs,
+    fats,
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm({ defaultValues });
+
+  const onSubmit = async (formData: AddRecipeStep5) => {
+    const { numberOfServings, calories, protein, carbs, fats } = formData;
+    setFormData(formData => ({
+      ...formData,
+      numberOfServings,
+      nutrition: {
+        ...formData.nutrition,
+        calories,
+        protein,
+        carbs,
+        fats,
+      }
+    }))
+    setCurrentStep(6)
+  }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-end w-full pb-2 border-b-2 border-neutral-200">
-        <h2 className="font-subHeading text-2xl font-medium">Recipe Details</h2>
-        <span className="text-sm font-light underline cursor-pointer" onClick={() => setCurrentStep(1)}>Edit</span>
-      </div>
-      <div className='relative aspect-2/3 mt-2'>
-      <Image
-              className="object-cover"
-              src={image!}
-              alt="Uploaded image"
-              fill={true}
-              priority
-            />
-      </div>
-      <p className="font-semibold">Recipe Name</p>
-      <p>{recipeName}</p>
-      <p className="font-semibold">Recipe Author</p>
-      <p>{sourceName}</p>
-      <p className="font-semibold">Recipe Url</p>
-      <p>{sourceUrl ? sourceUrl : '-' }</p>
-      <p className="font-semibold">Category</p>
-      <p>{category}</p>
-      <p className="font-semibold">Active Time</p>
-      <p>{formatTime(activeTime)}</p>
-      <p className="font-semibold">Total Time</p>
-      <p>{formatTime(totalTime)}</p>
-      <div className="flex justify-between items-end w-full mt-4 pb-2 border-b-2 border-neutral-200">
-        <h2 className="font-subHeading text-2xl font-medium">Ingredients</h2>
-        <span className="text-sm font-light underline cursor-pointer" onClick={() => setCurrentStep(2)}>Edit</span>
-      </div>
-      {ingredients.map((ingredient) => {
-        const { ingredientName, quantity, unitsOfMeasure } = ingredient;
-        return (
-          <p key={ingredientName}>{`${quantity ? formatFraction(quantity) : ''} ${unitsOfMeasure} ${ingredientName}`}</p>
-        )
-      })}
-      <div className="flex justify-between items-end w-full mt-4 pb-2 border-b-2 border-neutral-200">
-        <h2 className="font-subHeading text-2xl font-medium">Directions</h2>
-        <span className="text-sm font-light underline cursor-pointer" onClick={() => setCurrentStep(3)}>Edit</span>
-      </div>
-      {recipeDirections.map((step, index) => {
-        const currentStep: string = `Step ${index + 1}`;
-        return (
-          <div key={currentStep}>
-            <p className="block font-semibold">{currentStep}</p>
-            <p>{step}</p>
-          </div>
-        )
-      })}
-      <div className="flex justify-between items-end w-full mt-4 pb-2 border-b-2 border-neutral-200">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-2">
+      <div className="flex flex-col gap-2">
         <h2 className="font-subHeading text-2xl font-medium">Nutrition</h2>
-        <span className="text-sm font-light underline cursor-pointer" onClick={() => setCurrentStep(4)}>Edit</span>
+        <Input
+          label="Yield"
+          type="number"
+          name="numberOfServings"
+          required={true}
+          register={register}
+        />
+        <Input
+          label="Calories"
+          type="number"
+          name="calories"
+          required={true}
+          register={register}
+        />
+        <Input
+          label="Protein"
+          type="number"
+          name="protein"
+          decimal={0.1}
+          register={register}
+        />
+        <Input
+          label="Carbs"
+          type="number"
+          name="carbs"
+          decimal={0.1}
+          register={register}
+        />
+        <Input
+          label="Fats"
+          type="number"
+          name="fats"
+          decimal={0.1}
+          register={register}
+        />
       </div>
-      <p className="font-semibold">Yield</p>
-      <p>{numberOfServings}</p>
-      <p className="font-semibold">Calories</p>
-      <p>{calories}</p>
-      <p className="font-semibold">Protein</p>
-      <p>{protein ? protein : '-'}</p>
-      <p className="font-semibold">Carbs</p>
-      <p>{carbs ? carbs : '-'}</p>
-      <p className="font-semibold">Fats</p>
-      <p>{fats ? fats : '-'}</p>
-      <div className="flex gap-4 md:justify-end w-full mt-2">
-        <Button onClick={() => setCurrentStep(4)}>
-          Back
-        </Button>
-        <Button onClick={addRecipe}>Submit</Button>
-      </div>
-    </div>
+        <div className="flex gap-4 w-full mt-2 md:justify-end">
+          <Button className="w-full" onClick={() => setCurrentStep(4)}>Back</Button>
+          <Button className="w-full" type="submit">Next</Button>
+        </div>
+    </form>
   )
 }
 
