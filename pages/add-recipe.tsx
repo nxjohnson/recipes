@@ -4,6 +4,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps } from "next";
 import { Recipe } from "../types/RecipeTypes";
+import { RecipeProvider, useRecipe } from "../contexts/RecipeContext";
 import Step1 from "../components/forms/addRecipe/Step1";
 import Step2 from "../components/forms/addRecipe/Step2";
 import Step3 from "../components/forms/addRecipe/Step3";
@@ -13,8 +14,6 @@ import FormProgressBar from "../components/ui/FormProgressBar";
 import Step6 from "../components/forms/addRecipe/Step6";
 
 interface Context {
-  formData: Recipe;
-  setFormData: React.Dispatch<React.SetStateAction<Recipe>>;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -31,29 +30,7 @@ const AddRecipe = (): JSX.Element => {
   }, [user, router]);
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<Recipe>({
-    activeTime: 0,
-    attributes: {
-      category: "",
-    },
-    image: null,
-    ingredients: [],
-    notes: null,
-    numberOfServings: 1,
-    nutrition: {
-      calories: 0,
-      protein: null,
-      carbs: null,
-      fats: null,
-    },
-    recipeDirections: [],
-    recipeName: "",
-    source: {
-      sourceName: "",
-      sourceUrl: null,
-    },
-    totalTime: 0,
-  });
+
   const steps: string[] = [
     "Recipe Details",
     "Ingredients",
@@ -82,34 +59,35 @@ const AddRecipe = (): JSX.Element => {
     }
   };
 
-  const addRecipe = async (): Promise<void> => {
-    console.log(formData);
+  const addRecipe = async (recipe: Recipe): Promise<void> => {
     const response = await fetch("/api/recipes", {
       method: "POST",
-      body: JSON.stringify(formData),
+      body: JSON.stringify(recipe),
     });
     const id = await response.json();
 
     router.push({
-      pathname: `/recipes/${formData.recipeName}`,
+      pathname: `/recipes/${recipe.recipeName}`,
       query: { id },
     });
   };
 
   return (
-    <FormContext.Provider value={{ setCurrentStep, formData, setFormData }}>
-      <div className="flex flex-col w-full gap-4 px-8 py-8 lg:px-24">
-        <div className=" w-full pb-4 border-b-2 border-neutral-200">
-          <h1 className="font-heading text-4xl lg:text-7xl">Add Recipe</h1>
-        </div>
-        <div className="flex justify-center w-full">
-          <div className="flex flex-col w-full gap-2 md:w-136">
-            <FormProgressBar steps={steps} currentStep={currentStep} />
-            {renderFormStep(currentStep)}
+    <RecipeProvider>
+      <FormContext.Provider value={{ setCurrentStep }}>
+        <div className="flex flex-col w-full gap-4 px-8 py-8 lg:px-24">
+          <div className=" w-full pb-4 border-b-2 border-neutral-200">
+            <h1 className="font-heading text-4xl lg:text-7xl">Add Recipe</h1>
+          </div>
+          <div className="flex justify-center w-full">
+            <div className="flex flex-col w-full gap-2 md:w-136">
+              <FormProgressBar steps={steps} currentStep={currentStep} />
+              {renderFormStep(currentStep)}
+            </div>
           </div>
         </div>
-      </div>
-    </FormContext.Provider>
+      </FormContext.Provider>
+    </RecipeProvider>
   );
 };
 

@@ -1,17 +1,19 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextArea } from "../../ui/Form";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import Button from "../../ui/Button";
 import useFormContext from "../../../hooks/useFormContext";
+import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
 
 interface Direction {
   direction: string
 }
 
 const Step3 = () => {
-  const { setCurrentStep, formData, setFormData } = useFormContext()
-  const { recipeDirections } = formData;
+  const recipe = useRecipe();
+  const dispatch = useRecipeDispatch();
+  const { setCurrentStep } = useFormContext()
+  const { recipeDirections } = recipe;
   const defaultValues: Direction = {
     direction: ""
   }
@@ -26,17 +28,18 @@ const Step3 = () => {
 
   const removeStep = (index: number): void => {
     const updatedDirections = recipeDirections.filter((direction, i) => i !== index);
-    setFormData(formData => ({
-      ...formData,
-      recipeDirections: updatedDirections
-    }))
+    dispatch({
+      type: 'delete direction',
+      data: updatedDirections
+    })
   }
 
   const onSubmit = async (data: Direction): Promise<void> => {
-    setFormData(formData => ({
-      ...formData,
-      recipeDirections: [...formData.recipeDirections, data.direction]
-    }))
+    dispatch({
+      type: 'add direction',
+      data: data.direction
+    })
+
     reset();
   }
 
@@ -44,10 +47,7 @@ const Step3 = () => {
     if (!recipeDirections.length) {
       return;
     }
-    setFormData(formData => ({
-      ...formData,
-      recipeDirections,
-    }))
+
     setCurrentStep(4)
   }
 

@@ -1,15 +1,15 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../../ui/Form";
 import useFormContext from "../../../hooks/useFormContext";
 import { AddRecipeStep5 } from "../../../types/FormTypes";
 import Button from "../../ui/Button";
-
-
+import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
 
 const Step5 = () => {
-  const { setCurrentStep, formData, setFormData } = useFormContext()
-  const { numberOfServings, nutrition } = formData;
+  const recipe = useRecipe();
+  const dispatch = useRecipeDispatch();
+  const { setCurrentStep } = useFormContext();
+  const { numberOfServings, nutrition } = recipe;
   const { calories, protein, carbs, fats } = nutrition;
   const defaultValues: AddRecipeStep5 = {
     numberOfServings,
@@ -17,7 +17,7 @@ const Step5 = () => {
     protein,
     carbs,
     fats,
-  }
+  };
 
   const {
     register,
@@ -26,24 +26,20 @@ const Step5 = () => {
     control,
   } = useForm({ defaultValues });
 
-  const onSubmit = async (formData: AddRecipeStep5) => {
-    const { numberOfServings, calories, protein, carbs, fats } = formData;
-    setFormData(formData => ({
-      ...formData,
-      numberOfServings,
-      nutrition: {
-        ...formData.nutrition,
-        calories,
-        protein,
-        carbs,
-        fats,
-      }
-    }))
-    setCurrentStep(6)
-  }
+  const onSubmit = async (data: AddRecipeStep5) => {
+    dispatch({
+      type: "update step5",
+      data,
+    });
+
+    setCurrentStep(6);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col w-full gap-2"
+    >
       <div className="flex flex-col gap-2">
         <h2 className="font-subHeading text-2xl font-medium">Nutrition</h2>
         <Input
@@ -82,12 +78,16 @@ const Step5 = () => {
           register={register}
         />
       </div>
-        <div className="flex gap-4 w-full mt-2 md:justify-end">
-          <Button className="w-full" onClick={() => setCurrentStep(4)}>Back</Button>
-          <Button className="w-full" type="submit">Next</Button>
-        </div>
+      <div className="flex gap-4 w-full mt-2 md:justify-end">
+        <Button className="w-full" onClick={() => setCurrentStep(4)}>
+          Back
+        </Button>
+        <Button className="w-full" type="submit">
+          Next
+        </Button>
+      </div>
     </form>
-  )
-}
+  );
+};
 
 export default Step5;

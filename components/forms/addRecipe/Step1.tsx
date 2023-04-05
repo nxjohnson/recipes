@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input, Select } from "../../ui/Form";
 import ImageUpload from "../../layouts/ImageUpload";
@@ -6,11 +5,14 @@ import useFormContext from "../../../hooks/useFormContext";
 import { AddRecipeStep1 } from "../../../types/FormTypes";
 import { RecipeCategory } from "../../../types/RecipeTypes";
 import Button from "../../ui/Button";
+import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
 
 const Step1 = () => {
-  const { setCurrentStep, formData, setFormData } = useFormContext();
+  const recipe = useRecipe();
+  const dispatch = useRecipeDispatch();
+  const { setCurrentStep } = useFormContext();
   const { image, recipeName, source, attributes, activeTime, totalTime } =
-    formData;
+    recipe;
   const { sourceName, sourceUrl } = source;
   const { category } = attributes;
   const defaultValues: AddRecipeStep1 = {
@@ -39,10 +41,10 @@ const Step1 = () => {
   } = useForm({ defaultValues });
 
   const updateImage = (url: string): void => {
-    setFormData((formData) => ({
-      ...formData,
-      image: url,
-    }));
+    dispatch({
+      type: "update image",
+      data: url,
+    });
   };
 
   const onSubmit = async (data: AddRecipeStep1) => {
@@ -50,30 +52,10 @@ const Step1 = () => {
       return;
     }
 
-    const {
-      recipeName,
-      sourceName,
-      sourceUrl,
-      category,
-      activeTime,
-      totalTime,
-    } = data;
-    setFormData((formData) => ({
-      ...formData,
-      image,
-      recipeName,
-      activeTime,
-      totalTime,
-      source: {
-        ...formData.source,
-        sourceName,
-        sourceUrl,
-      },
-      attributes: {
-        ...formData.attributes,
-        category,
-      },
-    }));
+    dispatch({
+      type: "update step1",
+      data: { ...data },
+    });
 
     setCurrentStep(2);
   };
@@ -138,15 +120,10 @@ const Step1 = () => {
           />
         </div>
         <div className="flex gap-4 md:justify-end w-full mt-2">
-          <Button
-            className="invisible"
-            onClick={() => setCurrentStep(0)}
-          >
+          <Button className="invisible" onClick={() => setCurrentStep(0)}>
             Back
           </Button>
-          <Button type="submit">
-            Next
-          </Button>
+          <Button type="submit">Next</Button>
         </div>
       </div>
     </form>

@@ -9,10 +9,13 @@ import useFormContext from "../../../hooks/useFormContext";
 import SearchBar from "../../ui/SearchBar";
 import measuringUnits from "../../utilies/measuringUnits";
 import formatMeasuringUnits from "../../utilies/formatMeasuringUnits";
+import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
 
 const Step2 = () => {
-  const { setCurrentStep, formData, setFormData } = useFormContext();
-  const { ingredients } = formData;
+  const recipe = useRecipe();
+  const dispatch = useRecipeDispatch();
+  const { setCurrentStep } = useFormContext();
+  const { ingredients } = recipe;
   const [ingredientId, setIngredientId] = useState<number | null>(null);
   const defaultValues: Ingredients = {
     ingredientName: "",
@@ -34,10 +37,11 @@ const Step2 = () => {
     const updatedIngredients = ingredients.filter(
       (ingredient, i) => i !== index
     );
-    setFormData((formData) => ({
-      ...formData,
-      ingredients: updatedIngredients,
-    }));
+
+    dispatch({
+      type: "delete ingredient",
+      data: updatedIngredients,
+    });
   };
 
   async function getIngredientId(ingredient: string) {
@@ -54,8 +58,7 @@ const Step2 = () => {
   }
 
   const onSubmit = async (data: Ingredients): Promise<void> => {
-    const { ingredientName, preparation, quantity, unitsOfMeasure } =
-      data;
+    const { ingredientName, preparation, quantity, unitsOfMeasure } = data;
     if (!ingredientId) {
       const response = await getIngredientId(ingredientName.toLowerCase());
     }
@@ -68,10 +71,11 @@ const Step2 = () => {
       unitsOfMeasure,
     };
 
-    setFormData((formData) => ({
-      ...formData,
-      ingredients: [...formData.ingredients, ingredientObj],
-    }));
+    dispatch({
+      type: "add ingredient",
+      data: ingredientObj,
+    });
+
     setIngredientId(null);
     reset();
   };
@@ -80,10 +84,7 @@ const Step2 = () => {
     if (!ingredients.length) {
       return;
     }
-    setFormData((formData) => ({
-      ...formData,
-      ingredients,
-    }));
+
     setCurrentStep(3);
   };
 
@@ -103,12 +104,6 @@ const Step2 = () => {
               decimal={0.01}
               register={register}
             />
-            {/* <Input
-              label="Units of Measure"
-              type="text"
-              name="unitsOfMeasure"
-              register={register}
-            /> */}
             <Select
               label="Units of Measure"
               name="unitsOfMeasure"
@@ -117,13 +112,6 @@ const Step2 = () => {
             />
           </div>
           <div className="flex gap-2">
-            {/* <Input
-              label="Ingredient Name"
-              type="text"
-              name="ingredientName"
-              required={true}
-              register={register}
-            /> */}
             <SearchBar
               label="Ingredient Name"
               name="ingredientName"
