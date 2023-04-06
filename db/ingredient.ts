@@ -92,7 +92,6 @@ export async function insertIngredients(ingredients: Ingredients[], recipeId:num
 }
 
 export async function getIngredientId(ingredient: string) {
-  console.log('getIngredientId', ingredient)
   const { data, error } = await supabase
     .from("ingredients")
     .select()
