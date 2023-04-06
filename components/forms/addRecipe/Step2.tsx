@@ -59,12 +59,10 @@ const Step2 = () => {
 
   const onSubmit = async (data: Ingredients): Promise<void> => {
     const { ingredientName, preparation, quantity, unitsOfMeasure } = data;
-    if (!ingredientId) {
-      const response = await getIngredientId(ingredientName.toLowerCase());
-    }
 
     const ingredientObj = {
-      ingredientId,
+      ingredientId:
+        ingredientId || (await getIngredientId(ingredientName.toLowerCase())),
       ingredientName: ingredientName.toLowerCase(),
       preparation: preparation.toLowerCase(),
       quantity,
