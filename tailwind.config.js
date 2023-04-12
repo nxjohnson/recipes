@@ -14,6 +14,7 @@ module.exports = {
       black: '#000000',
       error: '#ED6A5A',
       neutral: colors.neutral,
+      gray: colors.gray,
     },
     fontFamily: {
       'heading': ['Antonio', 'sans-serif'],
