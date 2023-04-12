@@ -17,7 +17,7 @@ interface SelectProps {
   options: string[];
   name: string;
   required?: boolean;
-  onChange?: ChangeEventHandler
+  onChange?: ChangeEventHandler;
 }
 
 interface TextAreaProps {
@@ -30,7 +30,7 @@ interface TextAreaProps {
 export function Input({
   label,
   type,
-  placeholder = '',
+  placeholder = "",
   name,
   required = false,
   decimal = 1,
@@ -41,10 +41,7 @@ export function Input({
   return (
     <label className="block w-full font-medium">
       {label}
-      {required ?
-      <span className="text-error">{' *'}</span> :
-      <></>
-      }
+      {required && <span className="text-error">{" *"}</span>}
       <input
         className="form-input block mt-1 w-full font-normal"
         id={name}
@@ -52,7 +49,7 @@ export function Input({
         placeholder={placeholder}
         {...register(name, { onChange, required })}
         {...rest}
-        step={type === "number" ? decimal : undefined}
+        step={type === "number" && decimal}
       />
     </label>
   );
@@ -68,12 +65,9 @@ export function Select({
   ...rest
 }: SelectProps): JSX.Element {
   return (
-    <label className="block font-medium">
+    <label className="block w-full font-medium">
       {label}
-      {required ?
-      <span className="text-error">{' *'}</span> :
-      <></>
-      }
+      {required && <span className="text-error">{" *"}</span>}
       <select
         className="form-selct block mt-1 w-full font-normal"
         {...register(name, { onChange, required })}
@@ -101,12 +95,9 @@ export function TextArea({
   ...rest
 }: TextAreaProps): JSX.Element {
   return (
-    <label className="block font-medium">
+    <label className="block w-full font-medium">
       {label}
-      {required ?
-      <span className="text-error">{' *'}</span> :
-      <></>
-      }
+      {required && <span className="text-error">{" *"}</span>}
       <textarea
         className="form-textarea block mt-1 w-full font-normal"
         id={name}
