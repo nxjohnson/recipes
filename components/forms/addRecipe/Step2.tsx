@@ -10,6 +10,8 @@ import SearchBar from "../../ui/SearchBar";
 import measuringUnits from "../../utilies/measuringUnits";
 import formatMeasuringUnits from "../../utilies/formatMeasuringUnits";
 import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
+import IngredientCard from "../../IngredientCard";
+import FormList from "../../FormList";
 
 const Step2 = () => {
   const recipe = useRecipe();
@@ -127,34 +129,7 @@ const Step2 = () => {
           <Button type="submit">Add Ingredient</Button>
         </div>
       </form>
-      <div
-        className={
-          ingredients.length
-            ? "flex flex-col divide-y-2 divide-neutral-200"
-            : "hidden"
-        }
-      >
-        {ingredients.map((ingredient, index) => {
-          const { ingredientName, quantity, preparation, unitsOfMeasure } =
-            ingredient;
-          return (
-            <div key={ingredientName} className="flex justify-between h-12">
-              <span className="self-center">{`${
-                quantity ? formatFraction(quantity) : ""
-              } ${formatMeasuringUnits(
-                quantity,
-                unitsOfMeasure
-              )} ${ingredientName}${
-                preparation ? `, ${preparation.toLowerCase()}` : ""
-              }`}</span>
-              <MdOutlineRemoveCircleOutline
-                className="self-center text-3xl cursor-pointer"
-                onClick={() => removeIngredient(index)}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <FormList list={ingredients} card='ingredient' removeCard={removeIngredient} />
       <div className="flex gap-4 w-full md:justify-end">
         <Button className="w-full" onClick={() => setCurrentStep(1)}>
           Back
