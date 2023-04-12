@@ -22,7 +22,7 @@ export default function Filters({ category }: Props) {
   ];
 
   const defaultValues = {
-    category
+    category: category
   }
 
   const {

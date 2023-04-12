@@ -1,7 +1,5 @@
 import RecipeCard from "../../components/RecipeCard";
 import { Recipe, RecipeFilters } from "../../types/RecipeTypes";
-
-import clientPromise from "../../lib/mongodb";
 import { InferGetServerSidePropsType } from "next";
 import { getRecipes } from "../../db/recipe";
 import Filters from "../../components/Filters";
@@ -23,7 +21,7 @@ const Recipes = ({
         <h1 className="font-heading text-4xl md:w-1/2 lg:text-7xl">Recipes</h1>
         <div><Filters category={category} /></div>
       </div>
-      {recipes.length ? (
+      {recipes?.length ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {recipes.map((recipe: Recipe) => {
             return (
@@ -44,8 +42,8 @@ const Recipes = ({
 };
 
 export async function getServerSideProps({ query }: ServerSideProps) {
-  const category = query.category?.toLowerCase() as RecipeFilters || 'view all';
-  const recipes = await getRecipes(category);
+  const category = query.category as RecipeFilters;
+  const recipes = await getRecipes(category?.toLowerCase() as RecipeFilters);
 
   return {
     props: { recipes, category },
