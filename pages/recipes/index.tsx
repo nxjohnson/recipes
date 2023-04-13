@@ -42,7 +42,7 @@ const Recipes = ({
 };
 
 export async function getServerSideProps({ query }: ServerSideProps) {
-  const category = query.category as RecipeFilters;
+  const category = query.category || 'View All' as RecipeFilters;
   const recipes = await getRecipes(category?.toLowerCase() as RecipeFilters);
 
   return {

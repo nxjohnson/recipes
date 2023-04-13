@@ -1,10 +1,8 @@
 import { useForm } from "react-hook-form";
 import { TextArea } from "../../ui/Form";
-import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import Button from "../../ui/Button";
 import useFormContext from "../../../hooks/useFormContext";
 import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
-import DirectionCard from "../../DirectionCard";
 import FormList from "../../FormList";
 
 interface Direction {

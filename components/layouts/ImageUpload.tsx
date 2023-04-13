@@ -30,7 +30,7 @@ export default function ImageUpload({
     <>
       <label className="block font-medium">
         Recipe Image
-        {required ? <span className="text-error">{" *"}</span> : <></>}
+        {required && <span className="text-error">{" *"}</span>}
         <div className="flex flex-col w-full gap-4">
           <div className="flex flex-col w-full gap-2">
             <UploadImageByComputer
@@ -43,7 +43,7 @@ export default function ImageUpload({
           </div>
         </div>
       </label>
-      {image ? (
+      {image && (
         <div className="relative aspect-2/3 w-full">
           <div
             className="absolute top-4 right-4 z-10 p-1 bg-neutral-200 rounded-full cursor-pointer"
@@ -59,8 +59,6 @@ export default function ImageUpload({
             priority
           />
         </div>
-      ) : (
-        <></>
       )}
     </>
   );

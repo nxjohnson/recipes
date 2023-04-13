@@ -2,15 +2,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Ingredients } from "../../../types/RecipeTypes";
 import { Input, Select } from "../../ui/Form";
-import { MdOutlineRemoveCircleOutline } from "react-icons/md";
-import formatFraction from "../../utilies/formatFraction";
 import Button from "../../ui/Button";
 import useFormContext from "../../../hooks/useFormContext";
 import SearchBar from "../../ui/SearchBar";
 import measuringUnits from "../../utilies/measuringUnits";
-import formatMeasuringUnits from "../../utilies/formatMeasuringUnits";
 import { useRecipe, useRecipeDispatch } from "../../../contexts/RecipeContext";
-import IngredientCard from "../../IngredientCard";
 import FormList from "../../FormList";
 
 const Step2 = () => {
